@@ -15,6 +15,33 @@
         <template v-slot:table-caption>
           <h1>All cars</h1>
         </template>
+
+        <template
+          v-if="role === 'admin'"
+          v-slot:cell(action)="data"
+        >
+          {{ data.index }}
+        </template>
+
+        <template
+          v-else
+          v-slot:cell(action)="{ item }"
+        >
+          <b-button
+            :variant="item.reserved
+              ? 'danger'
+              : 'success'
+            "
+            :disabled="item.reserved"
+            @click="bookCar(item.id)"
+          >
+            {{
+              item.reserved
+                ? 'Unavailable'
+                : 'Book now'
+            }}
+          </b-button>
+        </template>
       </b-table>
     </b-row>
   </b-container>
@@ -92,6 +119,13 @@ export default {
         reserved: false
       }
     ]
+  },
+
+  methods: {
+    bookCar (carId) {
+      const bookingCar = this.cars.find(car => car.id === carId)
+      console.log(bookingCar)
+    }
   }
 }
 </script>

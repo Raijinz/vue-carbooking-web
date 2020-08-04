@@ -1,108 +1,131 @@
 <template>
-  <b-container>
-    <b-row
-      class="vh-100"
-      align-v="center"
-      align-h="center"
-    >
-      <ValidationObserver
-        ref="observer"
-        v-slot="{ handleSubmit }"
+  <div>
+    <b-container>
+      <b-row
+        class="vh-100"
+        align-v="center"
+        align-h="center"
       >
-        <b-form
-          @keyup.enter="login"
-          @submit.prevent="handleSubmit(onSubmit)"
+        <validation-observer
+          ref="observer"
+          v-slot="{ invalid, handleSubmit }"
         >
-          <b-form-row>
-            <ValidationProvider
-              v-slot="validationContext"
-              name="Username"
-              :rules="{
-                required: true,
-                min: 4
-              }"
-            >
-              <b-form-group
-                id="input-group-username"
-                label-cols="3"
-                label="Username:"
-                label-for="input-username"
+          <b-form
+            @keyup.enter="login"
+            @submit.prevent="handleSubmit(onSubmit)"
+          >
+            <b-form-row>
+              <validation-provider
+                v-slot="validationContext"
+                name="Username"
+                :rules="{
+                  required: true,
+                  min: 4
+                }"
               >
-                <b-form-input
-                  id="input-username"
-                  v-model="form.username"
-                  :state="getValidationState(validationContext)"
-                  name="input-username"
-                  type="text"
-                  placeholder="Username"
-                  aria-describedby="input-username-live-feedback"
-                />
-
-                <b-form-invalid-feedback
-                  id="input-username-live-feedback"
+                <b-form-group
+                  id="input-group-username"
+                  label-cols="3"
+                  label="Username:"
+                  label-for="input-username"
                 >
-                  {{ validationContext.errors[0] }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </ValidationProvider>
-          </b-form-row>
+                  <b-form-input
+                    id="input-username"
+                    v-model="form.username"
+                    :state="getValidationState(validationContext)"
+                    name="input-username"
+                    type="text"
+                    placeholder="Username"
+                    aria-describedby="input-username-live-feedback"
+                  />
 
-          <b-form-row>
-            <ValidationProvider
-              v-slot="validationContext"
-              name="Password"
-              :rules="{
-                required: true
-              }"
-            >
-              <b-form-group
-                id="input-group-password"
-                label-cols="3"
-                label="Password:"
-                label-for="input-password"
+                  <b-form-invalid-feedback
+                    id="input-username-live-feedback"
+                  >
+                    {{ validationContext.errors[0] }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </validation-provider>
+            </b-form-row>
+
+            <b-form-row>
+              <validation-provider
+                v-slot="validationContext"
+                name="Password"
+                :rules="{
+                  required: true
+                }"
               >
-                <b-form-input
-                  id="input-password"
-                  v-model="form.password"
-                  :state="getValidationState(validationContext)"
-                  name="input-password"
-                  type="password"
-                  placeholder="Password"
-                  aria-describedby="input-password-live-feedback"
-                />
-
-                <b-form-invalid-feedback
-                  id="input-password-live-feedback"
+                <b-form-group
+                  id="input-group-password"
+                  label-cols="3"
+                  label="Password:"
+                  label-for="input-password"
                 >
-                  {{ validationContext.errors[0] }}
-                </b-form-invalid-feedback>
-              </b-form-group>
-            </ValidationProvider>
-          </b-form-row>
+                  <b-form-input
+                    id="input-password"
+                    v-model="form.password"
+                    :state="getValidationState(validationContext)"
+                    name="input-password"
+                    type="password"
+                    placeholder="Password"
+                    aria-describedby="input-password-live-feedback"
+                  />
 
-          <b-row align-h="center">
-            <b-col>
-              <b-button
-                type="submit"
-                variant="primary"
-              >
-                Submit
-              </b-button>
-            </b-col>
+                  <b-form-invalid-feedback
+                    id="input-password-live-feedback"
+                  >
+                    {{ validationContext.errors[0] }}
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </validation-provider>
+            </b-form-row>
 
-            <b-col>
-              <b-button
-                variant="danger"
-                @click="resetForm()"
-              >
-                Reset
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-form>
-      </ValidationObserver>
-    </b-row>
-  </b-container>
+            <b-row align-h="center">
+              <b-col>
+                <b-button
+                  type="submit"
+                  :disabled="invalid"
+                  variant="primary"
+                >
+                  Submit
+                </b-button>
+              </b-col>
+
+              <b-col>
+                <b-button
+                  variant="danger"
+                  @click="resetForm()"
+                >
+                  Reset
+                </b-button>
+              </b-col>
+            </b-row>
+          </b-form>
+        </validation-observer>
+      </b-row>
+    </b-container>
+
+    <b-toast
+      id="login-failed-toast"
+      variant="danger"
+      auto-hide-delay="2500"
+    >
+      <template v-slot:toast-title>
+        <div class="d-flex flex-grow-1 align-items-baseline">
+          <b-img
+            blank
+            blank-color="#ff5555"
+            class="mr-2"
+            width="12"
+            height="12"
+          />
+          <strong class="mr-auto">Notice!</strong>
+        </div>
+      </template>
+      Login failed
+    </b-toast>
+  </div>
 </template>
 
 <script>
@@ -145,6 +168,9 @@ export default {
         this.$router.push({
           name: 'cars'
         })
+      } else {
+        // TODO: Error: Authen failed
+        this.$bvToast.show('login-failed-toast')
       }
     },
 

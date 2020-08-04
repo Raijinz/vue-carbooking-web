@@ -1,19 +1,74 @@
 <template>
-  <h1>TODO CARS</h1>
+  <b-container>
+    <b-row>
+      <b-table
+        id="cars-table"
+        :items="cars"
+        :fields="fields"
+        primary-key="id"
+        striped
+        bordered
+        hover
+        caption-top
+        head-variant="dark"
+      >
+        <template v-slot:table-caption>
+          <h1>All cars</h1>
+        </template>
+      </b-table>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
+// import axios from 'axios'
+
 export default {
   name: 'Cars',
 
   data: function () {
     return {
+      role: null,
+      fields: [],
       cars: []
     }
   },
 
-  created: function () {
-    // TODO: Request '{API}/cars/'
+  created: async function () {
+    this.role = sessionStorage.getItem('role')
+
+    this.fields = [
+      {
+        key: 'brandName',
+        label: 'Brand name',
+        sortable: true
+      },
+      {
+        key: 'modelName',
+        label: 'Model name',
+        sortable: true
+      },
+      {
+        key: 'price',
+        label: 'Price',
+        sortable: true
+      },
+      {
+        key: 'action',
+        label: 'Action',
+        sortable: false
+      }
+    ]
+
+    if (this.role === 'admin') {
+      this.fields.unshift({
+        key: 'id',
+        label: 'ID',
+        sortable: true
+      })
+    }
+
+    // const response = await axios.get('localhost:8000/cars')
     this.cars = [
       {
         id: 1,

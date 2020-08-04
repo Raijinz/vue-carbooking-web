@@ -146,7 +146,7 @@ export default {
   },
 
   methods: {
-    login () {
+    async login () {
       const userMock = {
         username: 'user',
         password: 'Test1234'

@@ -36,6 +36,10 @@
               :to="{ name: 'login' }"
             >
               Sign out
+              <b-icon
+                icon="box-arrow-in-right"
+                variant="danger"
+              />
             </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>

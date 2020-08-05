@@ -1,20 +1,27 @@
 <template>
   <div>
-    <b-container>
+    <b-container fluid>
       <b-row
         class="vh-100"
         align-v="center"
         align-h="center"
       >
-        <validation-observer
-          ref="observer"
-          v-slot="{ invalid, handleSubmit }"
+        <b-card
+          class="w-25"
+          bg-variant="light"
         >
-          <b-form
-            @keyup.enter="login"
-            @submit.prevent="handleSubmit(onSubmit)"
+          <template v-slot:header>
+            <h3>Login</h3>
+          </template>
+
+          <validation-observer
+            ref="observer"
+            v-slot="{ invalid, handleSubmit }"
           >
-            <b-form-row>
+            <b-form
+              @keyup.enter="login"
+              @submit.prevent="handleSubmit(onSubmit)"
+            >
               <validation-provider
                 v-slot="validationContext"
                 name="Username"
@@ -25,7 +32,7 @@
               >
                 <b-form-group
                   id="input-group-username"
-                  label-cols="3"
+                  label-cols="4"
                   label="Username:"
                   label-for="input-username"
                 >
@@ -46,9 +53,7 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </validation-provider>
-            </b-form-row>
 
-            <b-form-row>
               <validation-provider
                 v-slot="validationContext"
                 name="Password"
@@ -58,7 +63,7 @@
               >
                 <b-form-group
                   id="input-group-password"
-                  label-cols="3"
+                  label-cols="4"
                   label="Password:"
                   label-for="input-password"
                 >
@@ -79,30 +84,30 @@
                   </b-form-invalid-feedback>
                 </b-form-group>
               </validation-provider>
-            </b-form-row>
 
-            <b-row align-h="center">
-              <b-col>
-                <b-button
-                  type="submit"
-                  :disabled="invalid"
-                  variant="primary"
-                >
-                  Submit
-                </b-button>
-              </b-col>
+              <b-row align-h="center">
+                <b-col>
+                  <b-button
+                    type="submit"
+                    :disabled="invalid"
+                    variant="primary"
+                  >
+                    Submit
+                  </b-button>
+                </b-col>
 
-              <b-col>
-                <b-button
-                  variant="danger"
-                  @click="resetForm()"
-                >
-                  Reset
-                </b-button>
-              </b-col>
-            </b-row>
-          </b-form>
-        </validation-observer>
+                <b-col>
+                  <b-button
+                    variant="danger"
+                    @click="resetForm()"
+                  >
+                    Reset
+                  </b-button>
+                </b-col>
+              </b-row>
+            </b-form>
+          </validation-observer>
+        </b-card>
       </b-row>
     </b-container>
 

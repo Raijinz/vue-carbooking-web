@@ -5,7 +5,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: 'cars' */
-        '@/components/Cars.vue'),
+        '@/views/Cars.vue'),
     meta: {
       requiresAuth: true,
       roles: [
@@ -20,7 +20,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: 'management' */
-        '@/components/Management.vue'),
+        '@/views/Management.vue'),
     meta: {
       requiresAuth: true,
       roles: [

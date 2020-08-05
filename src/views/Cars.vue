@@ -240,7 +240,7 @@ export default {
       // TODO: Request PUT API:/cars/{id}
       for (let car of this.cars) {
         if (car.id === editedCar.id) {
-          car = editedCar
+          car = Object.assign(car, editedCar)
           break
         }
       }

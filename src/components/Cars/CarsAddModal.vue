@@ -161,6 +161,9 @@ export default {
   methods: {
     handleVisible (isVisible) {
       this.$emit('change-visible', isVisible)
+      this.carBrandName = ''
+      this.carModelName = ''
+      this.carPrice = 0
     },
 
     getValidationState ({ dirty, validated, valid = null }) {
@@ -174,7 +177,7 @@ export default {
     handleOk () {
       const newCar = {
         brandName: this.carBrandName,
-        modelName: this.carBrandName,
+        modelName: this.carModelName,
         price: this.carPrice
       }
 

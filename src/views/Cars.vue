@@ -220,12 +220,6 @@ export default {
       this.editingCar = this.cars.find(car => car.id === id)
     },
 
-    handleAddCar (car) {
-      car.id = this.cars.length + 1
-      car.reserved = false
-      this.cars.push(car)
-    },
-
     handleBookCar () {
       const targetCar = this.editingCar
       for (const car of this.cars) {
@@ -234,6 +228,12 @@ export default {
           break
         }
       }
+    },
+
+    handleAddCar (car) {
+      car.id = this.cars.length + 1
+      car.reserved = false
+      this.cars.push(car)
     },
 
     handleEditCar (editedCar) {

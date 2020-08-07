@@ -113,7 +113,8 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
+
 import CarsEditModal from '@/components/Cars/CarsEditModal'
 import CarsAddModal from '@/components/Cars/CarsAddModal'
 
@@ -142,7 +143,7 @@ export default {
     }
   },
 
-  created: async function () {
+  created: function () {
     this.role = sessionStorage.getItem('role')
 
     this.fields = [
@@ -176,33 +177,15 @@ export default {
       })
     }
 
-    // const response = await axios.get('localhost:8000/cars')
-    this.cars = [
-      {
-        id: 1,
-        brandName: 'Nissan',
-        modelName: 'Almera',
-        price: 1200000,
-        reserved: true
-      },
-      {
-        id: 2,
-        brandName: 'Toyota',
-        modelName: 'Vios',
-        price: 523000,
-        reserved: false
-      },
-      {
-        id: 3,
-        brandName: 'Audi',
-        modelName: 'TT',
-        price: 4000000,
-        reserved: false
-      }
-    ]
+    this.getCar()
   },
 
   methods: {
+    async getCar () {
+      const response = await axios.get('http://localhost:8000/cars')
+      this.cars = response.data
+    },
+
     bookCar (id) {
       this.editingCar = this.cars.find(car => car.id === id)
     },
@@ -220,37 +203,31 @@ export default {
       this.editingCar = this.cars.find(car => car.id === id)
     },
 
-    handleBookCar () {
-      const targetCar = this.editingCar
-      for (const car of this.cars) {
-        if (car.id === targetCar.id) {
-          car.reserved = true
-          break
-        }
-      }
+    async handleBookCar () {
+      await axios.put(`http://localhost:8000/cars/${this.editingCar.id}/book`)
+      this.getCar()
     },
 
-    handleAddCar (car) {
-      car.id = this.cars.length + 1
+    async handleAddCar (car) {
       car.reserved = false
-      this.cars.push(car)
+      await axios.post('http://localhost:8000/cars', car)
+      this.getCar()
     },
 
-    handleEditCar (editedCar) {
+    async handleEditCar (editedCar) {
       // TODO: Request PUT API:/cars/{id}
-      for (let car of this.cars) {
-        if (car.id === editedCar.id) {
-          car = Object.assign(car, editedCar)
-          break
-        }
-      }
+      await axios.put(`http://localhost:8000/cars/${this.editingCar.id}`, {
+        brandName: editedCar.brandName,
+        modelName: editedCar.modelName,
+        price: editedCar.price,
+        reserved: editedCar.reserved
+      })
+      this.getCar()
     },
 
-    handleRemoveCar () {
-      // TODO: Request DELETE API:/cars/{id}
-      const targetCar = this.editingCar
-      const targetCarIndex = this.cars.findIndex(car => car.id === targetCar.id)
-      this.cars.splice(targetCarIndex, 1)
+    async handleRemoveCar () {
+      await axios.delete(`http://localhost:8000/cars/${this.editingCar.id}`)
+      this.getCar()
     },
 
     onChangeAddModal (isVisible) {

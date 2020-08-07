@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import UsersAddModal from '@/components/Management/UsersAddModal'
 import UsersEditModal from '@/components/Management/UsersEditModal'
 
@@ -92,6 +94,7 @@ export default {
 
   data: function () {
     return {
+      role: null,
       fields: [],
       users: [],
       showAddModal: false,
@@ -105,6 +108,8 @@ export default {
   },
 
   created: function () {
+    this.role = sessionStorage.getItem('role')
+
     this.fields = [
       {
         key: 'id',
@@ -128,21 +133,15 @@ export default {
       }
     ]
 
-    this.users = [
-      {
-        id: 1,
-        name: 'Test1',
-        role: 'Admin'
-      },
-      {
-        id: 2,
-        name: 'Test2',
-        role: 'User'
-      }
-    ]
+    this.getUser()
   },
 
   methods: {
+    async getUser () {
+      const response = await axios.get('http://localhost:8000/users')
+      this.users = response.data
+    },
+
     addUser () {
       this.showAddModal = true
     },
@@ -156,26 +155,24 @@ export default {
       this.editingUser = this.users.find(user => user.id === id)
     },
 
-    handleAddUser (user) {
-      user.id = this.users.length + 1
-      this.users.push(user)
+    async handleAddUser (user) {
+      user.password = (this.role === 'admin' ? 'Admin1234' : 'User1234')
+      await axios.post('http://localhost:8000/users', user)
+      this.getUser()
     },
 
-    handleEditUser (editedUser) {
-      for (let user of this.users) {
-        if (user.id === editedUser.id) {
-          user = Object.assign(user, editedUser)
-          break
-        }
-      }
-    },
-
-    handleRemoveUser () {
-      const targetUser = this.editingUser
-      const targetUserIndex = this.users.findIndex(user => {
-        return user.id === targetUser.id
+    async handleEditUser (editedUser) {
+      await axios.put(`http://localhost:8000/users/${this.editingUser.id}`, {
+        name: editedUser.name,
+        password: (this.role === 'admin' ? 'Admin1234' : 'User1234'),
+        role: editedUser.role
       })
-      this.users.splice(targetUserIndex, 1)
+      this.getUser()
+    },
+
+    async handleRemoveUser () {
+      await axios.delete(`http://localhost:8000/users/${this.editingUser.id}`)
+      this.getUser()
     },
 
     onChangeAddModal (isVisible) {

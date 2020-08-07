@@ -134,6 +134,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Login',
 
@@ -152,7 +154,21 @@ export default {
 
   methods: {
     async login () {
-      const userMock = {
+      const response = await axios.post('http://localhost:8000/users/login', {
+        username: this.form.username,
+        password: this.form.password
+      })
+
+      if (response.data.success) {
+        sessionStorage.setItem('jwt', response.data.jwtToken)
+        sessionStorage.setItem('role', response.data.role)
+        this.$router.push({
+          name: 'cars'
+        })
+      } else {
+        this.$bvToast.show('login-failed-toast')
+      }
+      /* const userMock = {
         username: 'user',
         password: 'Test1234'
       }
@@ -176,7 +192,7 @@ export default {
       } else {
         // TODO: Error: Authen failed
         this.$bvToast.show('login-failed-toast')
-      }
+      } */
     },
 
     getValidationState ({ dirty, validated, valid = null }) {

@@ -182,7 +182,12 @@ export default {
 
   methods: {
     async getCar () {
-      const response = await axios.get('http://localhost:8000/cars')
+      const jwt = sessionStorage.getItem('jwt')
+      const response = await axios.get('http://localhost:8000/cars', {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       this.cars = response.data
     },
 
@@ -204,29 +209,49 @@ export default {
     },
 
     async handleBookCar () {
-      await axios.put(`http://localhost:8000/cars/${this.editingCar.id}/book`)
+      const jwt = sessionStorage.getItem('jwt')
+      await axios.put(`http://localhost:8000/cars/${this.editingCar.id}/book`,
+        null, {
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          }
+        })
       this.getCar()
     },
 
     async handleAddCar (car) {
+      const jwt = sessionStorage.getItem('jwt')
       car.reserved = false
-      await axios.post('http://localhost:8000/cars', car)
+      await axios.post('http://localhost:8000/cars', car, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       this.getCar()
     },
 
     async handleEditCar (editedCar) {
-      // TODO: Request PUT API:/cars/{id}
+      const jwt = sessionStorage.getItem('jwt')
       await axios.put(`http://localhost:8000/cars/${this.editingCar.id}`, {
         brandName: editedCar.brandName,
         modelName: editedCar.modelName,
         price: editedCar.price,
         reserved: editedCar.reserved
+      }, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       })
       this.getCar()
     },
 
     async handleRemoveCar () {
-      await axios.delete(`http://localhost:8000/cars/${this.editingCar.id}`)
+      const jwt = sessionStorage.getItem('jwt')
+      await axios.delete(`http://localhost:8000/cars/${this.editingCar.id}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       this.getCar()
     },
 

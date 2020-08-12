@@ -79,8 +79,8 @@
                 id="input-role"
                 v-model="userRole"
                 :options="[
-                  'User',
-                  'Admin'
+                  'user',
+                  'admin'
                 ]"
                 :state="getValidationState(validationContext)"
                 name="input-role"
@@ -109,7 +109,7 @@ export default {
     return {
       visible: this.show,
       userName: '',
-      userRole: ''
+      userRole: 'user'
     }
   },
 

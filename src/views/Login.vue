@@ -163,7 +163,7 @@ export default {
         sessionStorage.setItem('jwt', response.data.jwtToken)
         sessionStorage.setItem('role', response.data.role)
         this.$router.push({
-          name: 'cars'
+          name: 'home'
         })
       } else {
         this.$bvToast.show('login-failed-toast')

@@ -7,7 +7,6 @@ const routes = [
         /* webpackChunkName: 'cars' */
         '@/views/Cars.vue'),
     meta: {
-      requiresAuth: true,
       roles: [
         'user',
         'admin'
@@ -22,7 +21,6 @@ const routes = [
         /* webpackChunkName: 'management' */
         '@/views/Management.vue'),
     meta: {
-      requiresAuth: true,
       roles: [
         'admin'
       ]

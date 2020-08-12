@@ -46,7 +46,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const role = sessionStorage.getItem('role')
-    if (to.meta.roles.includes(role)) {
+    if (to.meta.roles && to.meta.roles.includes(role)) {
       next()
     } else {
       next('login')

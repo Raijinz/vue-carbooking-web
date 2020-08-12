@@ -46,7 +46,7 @@
           <b-button
             v-b-modal.delete-user-modal
             variant="danger"
-            :disabled="item.role === 'Admin'"
+            :disabled="item.role === 'admin'"
             @click="removeUser(item.id)"
           >
             <b-icon icon="trash" />
@@ -138,7 +138,12 @@ export default {
 
   methods: {
     async getUser () {
-      const response = await axios.get('http://localhost:8000/users')
+      const jwt = sessionStorage.getItem('jwt')
+      const response = await axios.get('http://localhost:8000/users', {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       this.users = response.data
     },
 
@@ -156,22 +161,42 @@ export default {
     },
 
     async handleAddUser (user) {
-      user.password = (this.role === 'admin' ? 'Admin1234' : 'User1234')
-      await axios.post('http://localhost:8000/users', user)
+      const jwt = sessionStorage.getItem('jwt')
+      user.password = (this.editingUser.role === 'admin'
+        ? 'Admin1234'
+        : 'User1234')
+
+      await axios.post('http://localhost:8000/users', user, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       this.getUser()
     },
 
     async handleEditUser (editedUser) {
+      const jwt = sessionStorage.getItem('jwt')
       await axios.put(`http://localhost:8000/users/${this.editingUser.id}`, {
         name: editedUser.name,
-        password: (this.role === 'admin' ? 'Admin1234' : 'User1234'),
+        password: (this.editingUser.role === 'admin'
+          ? 'Admin1234'
+          : 'User1234'),
         role: editedUser.role
+      }, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
       })
       this.getUser()
     },
 
     async handleRemoveUser () {
-      await axios.delete(`http://localhost:8000/users/${this.editingUser.id}`)
+      const jwt = sessionStorage.getItem('jwt')
+      await axios.delete(`http://localhost:8000/users/${this.editingUser.id}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
       this.getUser()
     },
 
